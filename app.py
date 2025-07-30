@@ -1,5 +1,7 @@
 import streamlit as st
-import difflib
+import openai
+
+openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # Title
 st.title("Apprenticeship KSB Matcher")
