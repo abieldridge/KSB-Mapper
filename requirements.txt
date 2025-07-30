@@ -1,2 +1,3 @@
 streamlit
-sentence-transformers
+torch==2.1.0
+sentence-transformers==2.2.2
