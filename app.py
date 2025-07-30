@@ -1,22 +1,18 @@
 import streamlit as st
 from sentence_transformers import SentenceTransformer, util
 
+# Load AI model (only once)
+model = SentenceTransformer('all-MiniLM-L6-v2')
+
 # Title
 st.title("Apprenticeship KSB Matcher")
 
-# UI elements
-selected_standard = st.selectbox("Select your apprenticeship standard:", apprenticeship_standards)
-reflection = st.text_area("Describe what you learned:")
-
-# Filtered apprenticeship standards
+# Define apprenticeship standards
 apprenticeship_standards = [
     "L2 Horticulture Operative",
     "L2 Arborist",
     "L2 Landscape Operative"
 ]
-
-# Load the sentence-transformers model once
-model = SentenceTransformer('all-MiniLM-L6-v2')
 
 # KSBs for selected standards
 ksb_data = {
