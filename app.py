@@ -1,12 +1,12 @@
 import streamlit as st
 from sentence_transformers import SentenceTransformer, util
 
+# Title
+st.title("Apprenticeship KSB Matcher")
+
 # UI elements
 selected_standard = st.selectbox("Select your apprenticeship standard:", apprenticeship_standards)
 reflection = st.text_area("Describe what you learned:")
-
-# Title
-st.title("Apprenticeship KSB Matcher")
 
 # Filtered apprenticeship standards
 apprenticeship_standards = [
