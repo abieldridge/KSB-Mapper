@@ -1,2 +1,2 @@
 streamlit
-sentence-transformers==2.2.2
+
