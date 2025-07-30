@@ -1,7 +1,6 @@
 import streamlit as st
-import openai
+from sentence_transformers import SentenceTransformer, util
 
-openai.api_key = st.secrets["OPENAI_API_KEY"]
 
 # Title
 st.title("Apprenticeship KSB Matcher")
@@ -13,6 +12,8 @@ apprenticeship_standards = [
     "L2 Landscape Operative"
 ]
 
+# Load the sentence-transformers model once
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 # KSBs for selected standards
 ksb_data = {
@@ -204,16 +205,18 @@ ksb_data = {
 selected_standard = st.selectbox("Select your apprenticeship standard:", apprenticeship_standards)
 reflection = st.text_area("Describe what you learned:")
 
-# Matching function
+# Matching function using sentence-transformers embeddings
 def match_ksbs(reflection, ksb_list):
-    matches = []
-    for ksb in ksb_list:
-        ksb_text = ksb.split(": ", 1)[1]
-        similarity = difflib.SequenceMatcher(None, reflection.lower(), ksb_text.lower()).ratio()
-        if similarity > 0.2:
-            matches.append((ksb, similarity))
-    matches.sort(key=lambda x: x[1], reverse=True)
-    return [m[0] for m in matches[:5]] if matches else ["No relevant KSBs found."]
+    if not reflection or not ksb_list:
+        return ["No relevant KSBs found."]
+    
+    reflection_embed = model.encode(reflection, convert_to_tensor=True)
+    ksb_embeds = model.encode(ksb_list, convert_to_tensor=True)
+    
+    cosine_scores = util.pytorch_cos_sim(reflection_embed, ksb_embeds)[0]
+    
+    top_matches = sorted(zip(ksb_list, cosine_scores), key=lambda x: x[1], reverse=True)[:5]
+    return [ksb for ksb, score in top_matches]
 
 # Button to trigger matching
 if st.button("Find Relevant KSBs"):
@@ -223,5 +226,5 @@ if st.button("Find Relevant KSBs"):
         st.subheader("Suggested KSBs:")
         for ksb in matched_ksbs:
             st.write(f"- {ksb}")
-    else:
+   else:
         st.warning("Please enter a reflection to get KSB suggestions.")
