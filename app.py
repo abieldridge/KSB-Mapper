@@ -1,8 +1,8 @@
 import streamlit as st
+import torch
 from sentence_transformers import SentenceTransformer, util
 
-# Load AI model (only once)
-model = SentenceTransformer('all-MiniLM-L6-v2')
+model = SentenceTransformer('all-MiniLM-L6-v2', device='cpu')
 
 # Title
 st.title("Apprenticeship KSB Matcher")
