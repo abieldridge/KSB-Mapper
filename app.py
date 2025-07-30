@@ -229,5 +229,5 @@ if st.button("Find Relevant KSBs"):
         st.subheader("Suggested KSBs:")
         for ksb in matched_ksbs:
             st.write(f"- {ksb}")
-   else:
+    else:
         st.warning("Please enter a reflection to get KSB suggestions.")
